@@ -1,0 +1,29 @@
+﻿services:
+  csharpapp:
+    container_name: first
+    build:
+      context: ..                 # ⬅️ корень решения (на уровень выше RoomApi)
+      dockerfile: ./RoomApi/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=RoomApi;Username=postgres;Password=*
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"              # .NET по умолчанию слушает 8080 внутри контейнера
+
+  db:
+    container_name: db
+    image: postgres:16.9
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Ls02101974
+      POSTGRES_USER: postgres
+      POSTGRES_DB: RoomApi
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
